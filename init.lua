@@ -7,17 +7,17 @@
 Kickstart.nvim is *not* a distribution.
 
 Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, understand
-  what your configuration is doing, and modify it to suit your needs.
+The goal is that you can read every line of code, top-to-bottom, understand
+what your configuration is doing, and modify it to suit your needs.
 
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
+Once you've done that, you should start exploring, configuring and tinkering to
+explore Neovim!
 
-  If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
+If you don't know anything about Lua, I recommend taking some time to read through
+a guide. One possible example:
+- https://learnxinyminutes.com/docs/lua/
 
-  And then you can explore or search through `:help lua-guide`
+And then you can explore or search through `:help lua-guide`
 
 
 Kickstart Guide:
@@ -306,7 +306,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'html', 'css' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
