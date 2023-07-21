@@ -139,6 +139,15 @@ require('lazy').setup({
     end,
   },
 
+  -- {
+  --   "xero/miasma.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd("colorscheme miasma")
+  --   end,
+  -- },
+
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -155,7 +164,8 @@ require('lazy').setup({
           {
             "filename",
             file_status = true,
-            path = 1,
+            -- 2 = full path, 1 = relative path, 0 = filename only
+            path = 2,
           },
         },
       },
@@ -214,6 +224,7 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
+  -- { import = 'custom.handmade' },
 }, {})
 
 -- [[ Setting options ]]
@@ -259,6 +270,9 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
+-- Exit the lazy way
+vim.keymap.set("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "jk as <ESC> key" })
+vim.keymap.set("t", "<ESC>", "<C-\\><C-n>", { noremap = true, silent = true, desc = "Exit terminal mode" })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -270,26 +284,28 @@ vim.keymap.set({ 'i' }, 'jk', '<Esc>', { silent = true })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- better exits
-vim.keymap.set("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "jk as <ESC> key" })
-vim.keymap.set("t", "<ESC>", "<C-\\><C-n>", { noremap = true, silent = true, desc = "Exit terminal mode" })
-
--- open oil with hyphen
+-- Oil for the machine's folders (file browser)
 vim.keymap.set("n", "-", require("oil").open_float, { desc = "Open parent directory" })
 
+-- Show the current line
+vim.o.cursorline = true
+
+-- Some scroll off when moving around
+vim.o.scrolloff = 3
+
 -- open definition in split (horizontal and vertical)
-vim.keymap.set(
-  "n",
-  "gH",
-  ":split<CR>gd",
-  { noremap = true, silent = true, desc = "Open definition in horizontal split" }
-)
-vim.keymap.set(
-  "n",
-  "gV",
-  ":vsplit<CR>gd",
-  { noremap = true, silent = true, desc = "Open definition in vertical split" }
-)
+-- vim.keymap.set(
+--   "n",
+--   "gH",
+--   ":split<CR>gd",
+--   { noremap = true, silent = true, desc = "Open definition in horizontal split" }
+-- )
+-- vim.keymap.set(
+--   "n",
+--   "gV",
+--   ":vsplit<CR>gd",
+--   { noremap = true, silent = true, desc = "Open definition in vertical split" }
+-- )
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -340,7 +356,12 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'ocaml', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = {
+    'c', 'go', 'lua', 'python', 'rust',
+    'vimdoc', 'vim', 'html', 'css',
+    'tsx', 'ocaml', 'typescript',
+    'javascript', 'json', 'yaml', 'toml',
+  },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -393,10 +414,10 @@ require('nvim-treesitter.configs').setup {
     swap = {
       enable = true,
       swap_next = {
-        ['<leader>a'] = '@parameter.inner',
+        ['<leader>ta'] = '@parameter.inner',
       },
       swap_previous = {
-        ['<leader>A'] = '@parameter.inner',
+        ['<leader>tA'] = '@parameter.inner',
       },
     },
   },
@@ -405,8 +426,8 @@ require('nvim-treesitter.configs').setup {
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+vim.keymap.set('n', '<leader>df', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
@@ -431,7 +452,7 @@ local on_attach = function(_, bufnr)
   nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
-  nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+  nmap('<leader>T', vim.lsp.buf.type_definition, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
@@ -462,7 +483,19 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {
+    ['rust-analyzer'] = {
+      checkOnSave = {
+        command = "clippy",
+      },
+      -- cargo = {
+      --   loadOutDirsFromCheck = true,
+      -- },
+      -- procMacro = {
+      --   enable = true,
+      -- },
+    },
+  },
   -- tsserver = {},
 
   lua_ls = {
@@ -518,7 +551,7 @@ cmp.setup {
     ['<C-Space>'] = cmp.mapping.complete {},
     ['<CR>'] = cmp.mapping.confirm {
       behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+      select = true
     },
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
@@ -545,9 +578,61 @@ cmp.setup {
   },
 }
 
-local neogit = require('neogit')
+-- Theme config
+require('onedark').setup({
+  -- Main options --
+  style = 'darker',             --  'dark' (default), 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+  transparent = false,          -- Show/hide background
+  term_colors = true,           -- Change terminal color as per the selected theme style
+  ending_tildes = false,        -- Show the end-of-buffer tildes. By default they are hidden
+  cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
 
+  -- toggle theme style ---
+  toggle_style_key = "<leader>ts",                                                     -- keybind to toggle theme style. Leave it `nil` to disable it, or set it to a string, for example "<leader>ts"
+  toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
+
+  -- Change code style ---
+  -- Options are italic, bold, underline, none
+  -- You can configure multiple style with comma separated, For e.g., keywords = 'italic,bold'
+  code_style = {
+    comments = 'italic',
+    keywords = 'none',
+    functions = 'none',
+    strings = 'none',
+    variables = 'none'
+  },
+
+  -- Lualine options --
+  lualine = {
+    transparent = false, -- lualine center bar transparency
+  },
+
+  -- Custom Highlights --
+  colors = {},     -- Override default colors
+  highlights = {}, -- Override highlight groups
+
+  -- Plugins Config --
+  diagnostics = {
+    darker = true,     -- darker colors for diagnostic
+    undercurl = true,  -- use undercurl instead of underline for diagnostics
+    background = true, -- use background color for virtual text
+  },
+})
+
+-- Magit for vim
+-- For more, see: https://github.com/NeogitOrg/neogit
+local neogit = require('neogit')
 neogit.setup {}
+vim.keymap.set('n', '<leader>gg', ':Neogit<CR>', { desc = 'Open Neogit' })
+
+-- Format the current buffer
+vim.keymap.set('n', '<leader>Fb', function() vim.lsp.buf.format({ async = true }) end,
+  { desc = '[F]ormat the current [b]uffer' })
+
+-- You can load your handmade plugins in here too!
+vim.keymap.set('n', '<leader>tt', function() require('custom.handmade.todolist').todolist() end,
+  { desc = 'Open todolist' })
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
