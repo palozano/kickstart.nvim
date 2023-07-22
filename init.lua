@@ -634,22 +634,22 @@ vim.keymap.set('n', '<leader>tt', function() require('custom.handmade.todolist')
   { desc = 'Open todolist' })
 
 
--- TODO: change this to jump to any char (f) and word (F)
--- Clever jumps
+-- Clever jumps. Check for more: https://github.com/phaazon/hop.nvim
 local hop = require('hop')
 local directions = require('hop.hint').HintDirection
 vim.keymap.set('n', 'f', function()
-  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
+  hop.hint_words({ direction = directions.AFTER_CURSOR, current_line_only = false })
+  -- hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
 end, { remap = true })
 vim.keymap.set('', 'F', function()
-  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
+  hop.hint_words({ direction = directions.BEFORE_CURSOR, current_line_only = false })
+  -- hop.hint_anywhere({ direction = directions.BEFORE_CURSOR, current_line_only = false })
 end, { remap = true })
-vim.keymap.set('', 't', function()
-  hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
-end, { remap = true })
-vim.keymap.set('', 'T', function()
-  hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
-end, { remap = true })
+
+
+-- Structural search and replace: https://github.com/cshuaimin/ssr.nvim
+vim.keymap.set({ "n", "x" }, "<leader>sr", function() require("ssr").open() end)
+
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
