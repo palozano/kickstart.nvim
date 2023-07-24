@@ -37,6 +37,10 @@ return {
   vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' }),
   vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' }),
 
+  -- Custom plugin to grep and replace
+  vim.keymap.set('n', '<leader>sV', function() require('custom.handmade.quicklist_replace').grep_in_vim() end,
+    { desc = '[V]imgrep search' }),
+
   -- Structural search and replace: https://github.com/cshuaimin/ssr.nvim
   vim.keymap.set({ "n", "x" }, "<leader>sr", function() require("ssr").open() end,
     { desc = '[S]tructural search and [r]eplace' }),

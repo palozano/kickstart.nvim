@@ -8,7 +8,7 @@ return {
         auto_trigger = true,
         debounce = 75,
         keymap = {
-          accept = "<C-space>",
+          accept = "<M-space>",
           next = "<right>",
           prev = "<left>",
         },
