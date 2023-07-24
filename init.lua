@@ -637,10 +637,10 @@ vim.keymap.set('n', '<leader>tt', function() require('custom.handmade.todolist')
 -- Clever jumps. Check for more: https://github.com/phaazon/hop.nvim
 local hop = require('hop')
 local directions = require('hop.hint').HintDirection
-vim.keymap.set('n', 'f', function()
+vim.keymap.set('n', '<leader>f', function()
   hop.hint_words({ direction = directions.AFTER_CURSOR, current_line_only = false })
 end, { remap = true })
-vim.keymap.set('n', 'F', function()
+vim.keymap.set('n', '<leader>F', function()
   hop.hint_words({ direction = directions.BEFORE_CURSOR, current_line_only = false })
 end, { remap = true })
 
@@ -648,6 +648,12 @@ end, { remap = true })
 -- Structural search and replace: https://github.com/cshuaimin/ssr.nvim
 vim.keymap.set({ "n", "x" }, "<leader>sr", function() require("ssr").open() end)
 
-
+-- Pets in the editor
+-- require("pets").setup()
+-- In the lua/plugins/custom/pets.lua file, add:
+-- return {
+--   "giusgad/pets.nvim",
+--   dependencies = { "MunifTanjim/nui.nvim", "giusgad/hologram.nvim" },
+-- }
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
