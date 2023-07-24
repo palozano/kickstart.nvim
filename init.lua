@@ -1,47 +1,24 @@
 --[[
 
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
+Based on kickstart.nvim is *not* a distribution.
 
-Kickstart.nvim is *not* a distribution.
+If you don't know anything about Lua, I recommend taking some time to
+read through a guide. One possible example:
+- https://learnxinyminutes.com/docs/lua/
 
-Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, understand
-  what your configuration is doing, and modify it to suit your needs.
+And then you can explore or search through `:help lua-guide`
 
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
-
-  If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
-
-  And then you can explore or search through `:help lua-guide`
-
-
-Kickstart Guide:
-
-I have left several `:help X` comments throughout the init.lua
-You should run that command and read that help section for more information.
-
-In addition, I have some `NOTE:` items throughout the file.
-These are for you, the reader to help understand what is happening. Feel free to delete
-them once you know what you're doing, but they should serve as a guide for when you
-are first encountering a few different constructs in your nvim config.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now :)
 --]]
+
+
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- Install package manager
+-- Yet another package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -61,7 +38,7 @@ vim.opt.rtp:prepend(lazypath)
 --  You can configure plugins using the `config` key.
 --
 --  You can also configure plugins after the setup call,
---    as they will be available in your neovim runtime.
+--  a s they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
@@ -95,7 +72,7 @@ require('lazy').setup({
     -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
+      -- Snippet Engine & its associated nvim-cmp s ource
       'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip',
 
@@ -138,15 +115,6 @@ require('lazy').setup({
       vim.cmd.colorscheme 'onedark'
     end,
   },
-
-  -- {
-  --   "xero/miasma.nvim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   config = function()
-  --     vim.cmd("colorscheme miasma")
-  --   end,
-  -- },
 
   {
     -- Set lualine as statusline
@@ -225,6 +193,7 @@ require('lazy').setup({
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'custom.plugins' },
   -- { import = 'custom.handmade' },
+  { import = 'keymaps' },
 }, {})
 
 -- [[ Setting options ]]
@@ -269,43 +238,12 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
--- [[ Basic Keymaps ]]
--- Exit the lazy way
-vim.keymap.set("i", "jk", "<ESC>", { noremap = true, silent = true, desc = "jk as <ESC> key" })
-vim.keymap.set("t", "<ESC>", "<C-\\><C-n>", { noremap = true, silent = true, desc = "Exit terminal mode" })
-
--- Keymaps for better default experience
--- See `:help vim.keymap.set()`
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
-vim.keymap.set({ 'i' }, 'jk', '<Esc>', { silent = true })
-
--- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
--- Oil for the machine's folders (file browser)
-vim.keymap.set("n", "-", require("oil").open_float, { desc = "Open parent directory" })
-
 -- Show the current line
 vim.o.cursorline = true
 
 -- Some scroll off when moving around
 vim.o.scrolloff = 3
 
--- open definition in split (horizontal and vertical)
--- vim.keymap.set(
---   "n",
---   "gH",
---   ":split<CR>gd",
---   { noremap = true, silent = true, desc = "Open definition in horizontal split" }
--- )
--- vim.keymap.set(
---   "n",
---   "gV",
---   ":vsplit<CR>gd",
---   { noremap = true, silent = true, desc = "Open definition in vertical split" }
--- )
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -334,23 +272,6 @@ require('telescope').setup {
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
--- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '[/] Fuzzily search in current buffer' })
-
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -423,12 +344,6 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
-vim.keymap.set('n', '<leader>df', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-vim.keymap.set('n', '<leader>dl', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
-
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -450,18 +365,18 @@ local on_attach = function(_, bufnr)
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
   nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
   nmap('<leader>T', vim.lsp.buf.type_definition, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  nmap('<leader>sD', require('telescope.builtin').lsp_document_symbols, 'search [D]ocument symbols')
+  nmap('<leader>sW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'search [W]orkspace symbols')
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
-  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
   nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
   nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
   nmap('<leader>wl', function()
@@ -476,7 +391,6 @@ end
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
---
 --  Add any additional override configuration in the following tables. They will be passed to
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
@@ -623,30 +537,6 @@ require('onedark').setup({
 -- For more, see: https://github.com/NeogitOrg/neogit
 local neogit = require('neogit')
 neogit.setup {}
-vim.keymap.set('n', '<leader>gg', ':Neogit<CR>', { desc = 'Open Neogit' })
-
--- Format the current buffer
-vim.keymap.set('n', '<leader>Fb', function() vim.lsp.buf.format({ async = true }) end,
-  { desc = '[F]ormat the current [b]uffer' })
-
--- You can load your handmade plugins in here too!
-vim.keymap.set('n', '<leader>tt', function() require('custom.handmade.todolist').todolist() end,
-  { desc = 'Open todolist' })
-
-
--- Clever jumps. Check for more: https://github.com/phaazon/hop.nvim
-local hop = require('hop')
-local directions = require('hop.hint').HintDirection
-vim.keymap.set('n', '<leader>f', function()
-  hop.hint_words({ direction = directions.AFTER_CURSOR, current_line_only = false })
-end, { remap = true })
-vim.keymap.set('n', '<leader>F', function()
-  hop.hint_words({ direction = directions.BEFORE_CURSOR, current_line_only = false })
-end, { remap = true })
-
-
--- Structural search and replace: https://github.com/cshuaimin/ssr.nvim
-vim.keymap.set({ "n", "x" }, "<leader>sr", function() require("ssr").open() end)
 
 -- Pets in the editor
 -- require("pets").setup()
@@ -655,5 +545,7 @@ vim.keymap.set({ "n", "x" }, "<leader>sr", function() require("ssr").open() end)
 --   "giusgad/pets.nvim",
 --   dependencies = { "MunifTanjim/nui.nvim", "giusgad/hologram.nvim" },
 -- }
+
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
