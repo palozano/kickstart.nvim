@@ -74,5 +74,14 @@ return {
   end, { remap = true, desc = 'Hop (backwards) to word' }),
 
   -- Know what you did
-  vim.keymap.set('n', '<leader>u', ':UndotreeToggle<CR>', { desc = '(toggle) [U]ndotree' })
+  vim.keymap.set('n', '<leader>u', ':UndotreeToggle<CR>', { desc = '(toggle) [U]ndotree' }),
+
+  -- Search across branches
+  vim.keymap.set('n', '<leader>sB', function() require('handmade.git').grep_in_vim() end,
+    { desc = "[s]earch across all [B]ranches" }),
+
+  -- Show file at commit
+  vim.keymap.set('n', '<leader>gs', function() require('handmade.git').git_show_file_at_commit() end,
+    { desc = "[s]how commit at revision" }),
+
 }
