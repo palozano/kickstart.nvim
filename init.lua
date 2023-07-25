@@ -1,15 +1,10 @@
 --[[
 
-Based on kickstart.nvim is *not* a distribution.
-
-If you don't know anything about Lua, I recommend taking some time to
-read through a guide. One possible example:
-- https://learnxinyminutes.com/docs/lua/
-
-And then you can explore or search through `:help lua-guide`
+Based on kickstart.nvim, which is *not* a distribution.
+Read through a guide: https://learnxinyminutes.com/docs/lua/
+Then you can explore or search through `:help lua-guide`
 
 --]]
-
 
 
 -- Set <space> as the leader key
@@ -182,8 +177,9 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  require 'kickstart.plugins.autoformat',
-  require 'kickstart.plugins.debug',
+  --
+  -- require 'plugins.autoformat',
+  -- require 'plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -191,8 +187,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  { import = 'custom.plugins' },
-  -- { import = 'custom.handmade' },
+  { import = 'plugins' },
   { import = 'keymaps' },
 }, {})
 

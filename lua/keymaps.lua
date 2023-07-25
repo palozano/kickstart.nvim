@@ -38,7 +38,10 @@ return {
   vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' }),
 
   -- Custom plugin to grep and replace
-  vim.keymap.set('n', '<leader>sV', function() require('custom.handmade.quicklist_replace').grep_in_vim() end,
+  vim.keymap.set('n', '<leader>sV', function() require('handmade.quicklist').vimgrep_ui() end,
+    { desc = '[V]imgrep search' }),
+  vim.keymap.set('n', '<leader>sR',
+    function() require('handmade.quicklist').replace_in_quickfix_list() end,
     { desc = '[V]imgrep search' }),
 
   -- Structural search and replace: https://github.com/cshuaimin/ssr.nvim
@@ -59,7 +62,7 @@ return {
     { desc = '[B]uffer: [F]ormat the current buffer' }),
 
   -- You can load your handmade plugins in here too!
-  vim.keymap.set('n', '<leader>tt', function() require('custom.handmade.todolist').todolist() end,
+  vim.keymap.set('n', '<leader>tt', function() require('handmade.todolist').todolist() end,
     { desc = 'Open todolist' }),
 
   -- Clever jumps. Check for more: https://github.com/phaazon/hop.nvim
