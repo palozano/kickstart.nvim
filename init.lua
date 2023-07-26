@@ -80,7 +80,14 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',          opts = {} },
+  {
+    'folke/which-key.nvim',
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+    end,
+    opts = {}
+  },
   {
     -- Adds git releated signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -129,7 +136,7 @@ require('lazy').setup({
     -- See `:help lualine.txt`
     opts = {
       options = {
-        icons_enabled = false,
+        icons_enabled = true,
         theme = 'onedark',
         component_separators = '|',
         section_separators = '',
@@ -139,8 +146,7 @@ require('lazy').setup({
           {
             "filename",
             file_status = true,
-            -- 2 = full path, 1 = relative path, 0 = filename only
-            path = 2,
+            path = 2, -- 2 = full path, 1 = relative path, 0 = filename only
           },
         },
       },
@@ -203,9 +209,8 @@ require('lazy').setup({
   { import = 'keymaps' },
 }, {})
 
--- [[ Setting options ]]
+-- [[ Settings options ]]
 -- See `:help vim.o`
--- NOTE: You can change these options as you wish!
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -368,14 +373,14 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+  nmap('<leader>rn', vim.lsp.buf.rename, '[r]e[n]ame')
+  nmap('<leader>ca', vim.lsp.buf.code_action, '[c]ode [a]ction')
 
-  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
-  nmap('<leader>T', vim.lsp.buf.type_definition, 'Type [D]efinition')
+  nmap('gd', vim.lsp.buf.definition, '[g]o to [d]efinition')
+  nmap('gD', vim.lsp.buf.declaration, '[g]o to [D]eclaration')
+  nmap('gr', require('telescope.builtin').lsp_references, '[g]o to [r]eferences')
+  nmap('gI', vim.lsp.buf.implementation, '[g]o to [I]mplementation')
+  nmap('gT', vim.lsp.buf.type_definition, '[g]o to [T]ype definition')
   nmap('<leader>sD', require('telescope.builtin').lsp_document_symbols, 'search [D]ocument symbols')
   nmap('<leader>sW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'search [W]orkspace symbols')
 
@@ -384,11 +389,11 @@ local on_attach = function(_, bufnr)
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
-  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-  nmap('<leader>wl', function()
+  nmap('<leader>wfa', vim.lsp.buf.add_workspace_folder, '[w]orkspace [f]older [a]dd')
+  nmap('<leader>wfr', vim.lsp.buf.remove_workspace_folder, '[w]orkspace [f]older [r]emove ')
+  nmap('<leader>wfl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, '[W]orkspace [L]ist Folders')
+  end, '[w]orkspace [f]olders [l]ist')
 
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -510,8 +515,9 @@ require('onedark').setup({
   cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
 
   -- toggle theme style ---
-  toggle_style_key = "<leader>ts",                                                     -- keybind to toggle theme style. Leave it `nil` to disable it, or set it to a string, for example "<leader>ts"
-  toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
+  toggle_style_key = "<leader>ts",         -- keybind to toggle theme style. Leave it `nil` to disable it, or set it to a string, for example "<leader>ts"
+  toggle_style_list = { 'warm', 'light' }, -- List of styles to toggle between
+  -- toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
 
   -- Change code style ---
   -- Options are: italic, bold, underline, none
@@ -519,7 +525,7 @@ require('onedark').setup({
   code_style = {
     comments = 'italic',
     keywords = 'none',
-    functions = 'underline',
+    functions = 'italic',
     strings = 'none',
     variables = 'none'
   },
@@ -534,12 +540,12 @@ require('onedark').setup({
     -- bright_orange = "#ff8800", -- define a new color
     -- green = '#00ffaa',         -- redefine an existing color
   },
-  highlights = {
+  highlights = { -- Override highlight groups
     -- ["@keyword"] = { fg = '$green' },
     -- ["@string"] = { fg = '$bright_orange', bg = '#00ff00', fmt = 'bold' },
     -- ["@function"] = { fg = '#0000ff', sp = '$cyan', fmt = 'underline,italic' },
     -- ["@function.builtin"] = { fg = '#0059ff' }
-  }, -- Override highlight groups
+  },
 
   -- Plugins Config --
   diagnostics = {
@@ -563,6 +569,21 @@ neogit.setup {}
 --   "giusgad/pets.nvim",
 --   dependencies = { "MunifTanjim/nui.nvim", "giusgad/hologram.nvim" },
 -- }
+
+
+-- local rt = require("rust-tools")
+--
+-- rt.setup({
+--   server = {
+--     on_attach = function(_, bufnr)
+--       -- Hover actions
+--       vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+--       -- Code action groups
+--       vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+--     end,
+--   },
+-- })
+
 
 
 -- The line beneath this is called `modeline`. See `:help modeline`

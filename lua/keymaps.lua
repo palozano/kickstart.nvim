@@ -84,4 +84,13 @@ return {
   vim.keymap.set('n', '<leader>gs', function() require('handmade.git').git_show_file_at_commit() end,
     { desc = "[s]how commit at revision" }),
 
+  -- Open/Close the quickfix list
+  vim.keymap.set('n', '<leader>q', ':copen<CR>', { desc = 'Open the [q]uickfix list' }),
+  vim.keymap.set('n', '<leader>Q', ':cclose<CR>', { desc = 'Close the [Q]uickfix list' }),
+  vim.keymap.set('n', '<leader>qx', function() require('handmade.quicklist').command_to_execute_in_quickfix_list() end,
+    { desc = 'E[x]ecute in quickfix list' }),
+
+  -- Merge tool
+  vim.keymap.set('n', '<leader>mt', function() require('handmade.mergetool').select_revision_or_commit() end,
+    { desc = '[M]erge [T]ool' }),
 }
