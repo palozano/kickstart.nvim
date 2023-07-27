@@ -60,6 +60,14 @@ require('lazy').setup({
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
+
+      -- Types in the way
+      {
+        'simrat39/inlay-hints.nvim',
+        config = function()
+          require('inlay-hints').setup()
+        end,
+      }
     },
   },
 

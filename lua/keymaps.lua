@@ -14,7 +14,8 @@ return {
   vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true }),
 
   -- Oil for the machine's folders (file browser)
-  vim.keymap.set("n", "-", require("oil").open_float, { desc = "Open parent directory" }),
+  -- NOTE: `open_float` does not let you open preview with C-p, so now we use `open` and C-c to close Oil.
+  vim.keymap.set("n", "-", require("oil").open, { desc = "Open parent directory" }),
 
   -- open definition in split (horizontal and vertical)
   -- vim.keymap.set("n", "gH", ":split<CR>gd", { noremap = true, silent = true, desc = "Open definition in horizontal split" }),
